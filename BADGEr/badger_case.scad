@@ -33,8 +33,9 @@ uSD_height=15;				// height of uSD slot
 uSD_width=17.5;				// width of uSD slot
 uSD_depth=4;					// uSD depth
 
-magnet_width=6.5;			// 1/4"
-magnet_depth=1.8;			// 1/16"
+magnet_width=7;				// 1/4"
+magnet_depth=2.5;			// 1/16"
+magnet_border=1.5;			// thickness of the border around the magnet
 
 display_width=71;			// width of the display
 display_height=46;			// height of the display
@@ -44,7 +45,7 @@ button_size=6;				// size of the buttons
 button_depth=6.5;			// depth of the buttons
 button_Y=3;					// button Y location
 button_X=[32.3, 42.3, 52.5, 62.7, 78];	// X locations of the buttons
-top_depth=6.5;
+top_depth=4.5;
 
 header_width=16;				// Width of the headers on the bottom
 header_length=10;
@@ -118,7 +119,7 @@ module case_back()
 				0])
 	difference()
 	{
-			cylinder(r=(magnet_width/2) + 2, h=back_depth+case_depth);
+			cylinder(r=(magnet_width/2) + magnet_border, h=back_depth+case_depth);
 			translate([0,0, back_depth + case_depth - magnet_depth])
 				cylinder(r=(magnet_width/2), h = magnet_depth);
 	}
@@ -128,7 +129,7 @@ module case_back()
 				0])
 	difference()
 	{
-			cylinder(r=(magnet_width/2) + 2, h=back_depth+case_depth);
+			cylinder(r=(magnet_width/2) + magnet_border, h=back_depth+case_depth);
 			translate([0,0, back_depth + case_depth - magnet_depth])
 				cylinder(r=(magnet_width/2), h = magnet_depth);
 	}
@@ -149,7 +150,7 @@ module case_top_with_magnets()
 				0])
 	difference()
 	{
-			cylinder(r=(magnet_width/2) + 2, h=top_depth+case_depth);
+			cylinder(r=(magnet_width/2) + magnet_border, h=top_depth+case_depth);
 				cylinder(r=(magnet_width/2), h = magnet_depth);
 	}
 
@@ -159,7 +160,7 @@ module case_top_with_magnets()
 				0])
 	difference()
 	{
-			cylinder(r=(magnet_width/2) + 2, h=top_depth+case_depth);
+			cylinder(r=(magnet_width/2) + magnet_border, h=top_depth+case_depth);
 				cylinder(r=(magnet_width/2), h = magnet_depth);
 	}
 
@@ -185,13 +186,22 @@ module case_top()
 		// led opening
 		translate([led_X, led_Y, 0])
 			cube([led_width, led_height, top_depth + case_depth]);
+
+		// left "ear"
+		translate([(case_width - badger_width) / 2, badger_height, 0])
+			cube([ear_width, ear_height, ear_thickness]);
+		// right "ear"
+		translate([case_width - ((case_width - badger_width) / 2) - ear_width, badger_height, 0])
+			cube([ear_width, ear_height, ear_thickness]);
+
 	}
 }
 
 // Generate Back of the case. Shift by 5 so the two case halves aren't touching
-translate([0,5,0]) case_back();
+translate([0,5,0])
+	case_back();
 
 // Generate front of the case
 
-//translate([0, 0, top_depth + case_depth]) rotate([180,0,0])
-//	case_top();
+translate([0, 0, top_depth + case_depth]) rotate([180,0,0])
+	case_top();
